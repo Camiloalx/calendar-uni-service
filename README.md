@@ -21,5 +21,17 @@ También asegúrate de tener las siguientes herramientas:
    ```bash
    git clone https://github.com/tuusuario/calendar-uni-service.git
 2. Abre el proyecto en intellij y espera a que se compile.
-3. Ejecuta el proyecto. 
+3. Ejecuta el proyecto.
+
+## Anexos 
+Se adjunta la peticion json para crear un horario: 
+```
+{
+    "id": 1,
+    "title": "Clase de Calculo",
+    "description": "Salon destinado para la clase de Calculo",
+    "location": "Salon 101",
+    "startDate": "hoy",
+    "endDate": "mas ratico"
+}
 
