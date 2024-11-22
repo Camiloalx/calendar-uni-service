@@ -1,0 +1,126 @@
+package com.unimayor.calendar_uni_service.modules.management.room.api;
+
+import com.unimayor.calendar_uni_service.core.constant.MessageConstant;
+import com.unimayor.calendar_uni_service.core.domain.RoomDomain;
+import com.unimayor.calendar_uni_service.core.exeption.BusinessException;
+import com.unimayor.calendar_uni_service.modules.management.room.controller.RoomController;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Log4j2
+@RestController
+@CrossOrigin("*")
+@RequestMapping(value = "/room", produces = {MediaType.APPLICATION_JSON_VALUE})
+public class RoomWebApi {
+
+    @Autowired
+    private RoomController roomController;
+
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> createRoom(@RequestBody final RoomDomain roomDomain) {
+        log.info("Init: Create room");
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            roomController.createRoom(roomDomain);
+            response.put(MessageConstant.RESPONSE_MESSAGE, "Room created successfully.");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (BusinessException e) {
+            log.error("Error creating room: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error("Unexpected error while creating room: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, "Unexpected error: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getAllRooms() {
+        log.info("Init: Get all rooms");
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            List<RoomDomain> rooms = roomController.findAll();
+            response.put(MessageConstant.RESPONSE_MESSAGE, rooms);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusinessException e) {
+            log.error("Error retrieving rooms: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error("Unexpected error while retrieving rooms: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, "Unexpected error: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/find-by-code")
+    public ResponseEntity<Map<String, Object>> getRoomByCode(@RequestParam final String code) {
+        log.info("Init: Get room by code");
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            RoomDomain room = roomController.findByCode(code);
+            response.put(MessageConstant.RESPONSE_MESSAGE, room);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusinessException e) {
+            log.error("Error retrieving room: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error("Unexpected error while retrieving room: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, "Unexpected error: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateRoom(@RequestBody final RoomDomain roomDomain) {
+        log.info("Init: Update room");
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            roomController.update(roomDomain);
+            response.put(MessageConstant.RESPONSE_MESSAGE, "Room updated successfully.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusinessException e) {
+            log.error("Error updating room: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error("Unexpected error while updating room: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, "Unexpected error: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteRoom(@RequestParam final String code) {
+        log.info("Init: Delete room");
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            roomController.delete(code);
+            response.put(MessageConstant.RESPONSE_MESSAGE, "Room deleted successfully.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusinessException e) {
+            log.error("Error deleting room: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error("Unexpected error while deleting room: ", e);
+            response.put(MessageConstant.RESPONSE_MESSAGE, "Unexpected error: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+}
