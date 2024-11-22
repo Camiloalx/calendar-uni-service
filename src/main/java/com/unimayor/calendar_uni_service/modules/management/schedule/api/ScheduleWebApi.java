@@ -15,6 +15,13 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class para web api de schedule
+ *
+ * @author Brayan Alexis Alvarado
+ * @version 1.0
+ * @since 2024-11-21
+ */
 @Log4j2
 @RestController
 @CrossOrigin("*")

@@ -10,14 +10,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(
 		scanBasePackages = {
 				"com.unimayor.calendar_uni_service.infrastructure",
-				"com.unimayor.calendar_uni_service.modules.management",
+				"com.unimayor.calendar_uni_service.modules",
 				"com.unimayor.calendar_uni_service.core"
 		}
 )
-//@EnableJpaRepositories(
-//		basePackages = {"com.unimayor.calendar_uni_service.core.persistence.repository"}
-//)
-//@EntityScan(basePackages = "com.unimayor.calendar_uni_service.core.persistence.entity")
+@EnableJpaRepositories(
+		basePackages = {"com.unimayor.calendar_uni_service.core.persistence.repository"}
+)
+@EntityScan(basePackages = "com.unimayor.calendar_uni_service.core.persistence.entity")
 @EnableScheduling
 public class CalendarUniServiceApplication {
 
