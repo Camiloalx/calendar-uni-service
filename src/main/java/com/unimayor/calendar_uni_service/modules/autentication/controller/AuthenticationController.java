@@ -4,18 +4,20 @@ import com.unimayor.calendar_uni_service.core.domain.AuthenticationDomain;
 import com.unimayor.calendar_uni_service.core.domain.UserDomain;
 import com.unimayor.calendar_uni_service.core.exeption.BusinessException;
 import com.unimayor.calendar_uni_service.core.util.StringUtils;
-import com.unimayor.calendar_uni_service.modules.autentication.dataprovider.AuthenticateDataProvider;
+import com.unimayor.calendar_uni_service.modules.management.user.dataprovider.UserDataProvider;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
+
+import java.util.Objects;
 
 @Controller
 @Log4j2
 public class AuthenticationController {
-    private final AuthenticateDataProvider authenticateDataProvider;
-    private StringUtils stringUtils = new StringUtils();
+    private final UserDataProvider userDataProvider;
+    private final StringUtils stringUtils = new StringUtils();
 
-    public AuthenticationController(AuthenticateDataProvider authenticateDataProvider) {
-        this.authenticateDataProvider = authenticateDataProvider;
+    public AuthenticationController(UserDataProvider userDataProvider) {
+        this.userDataProvider = userDataProvider;
     }
 
     public String processAuthentication(AuthenticationDomain authenticationDomain) {
@@ -41,13 +43,16 @@ public class AuthenticationController {
 
     private void isExist(AuthenticationDomain authenticationDomain) {
         log.info("Validate use is exist");
-        authenticateDataProvider.findUser(authenticationDomain);
+        UserDomain userDomain = userDataProvider.findUser(authenticationDomain.getUsername());
+        if (Objects.isNull(userDomain)) {
+            throw new BusinessException("El usaurio no existe en la BD: " + authenticationDomain.getUsername());
+        }
         log.info("is exist");
     }
 
     private void isEnabled(AuthenticationDomain authenticationDomain) {
         log.info("validate user is enabled {}", authenticationDomain.getUsername());
-        UserDomain userDomain = authenticateDataProvider.findUser(authenticationDomain);
+        UserDomain userDomain = userDataProvider.findUser(authenticationDomain.getUsername());
 
         if (userDomain.active) {
             log.info("user is active");
@@ -59,7 +64,14 @@ public class AuthenticationController {
 
 
     private String isLogin(AuthenticationDomain authenticationDomain) {
-        return authenticationDomain.getUsername();
+        UserDomain userDomain = userDataProvider.findUser(authenticationDomain.getUsername());
+        if (authenticationDomain.getPassword().equals(userDomain.getPassword())) {
+            log.info("Login exitoso");
+            return authenticationDomain.getUsername();
+        } else {
+            throw new BusinessException("La contraseña no coinciden");
+        }
+
     }
 
 

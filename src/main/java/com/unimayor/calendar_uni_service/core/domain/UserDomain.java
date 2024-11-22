@@ -8,6 +8,5 @@ import lombok.Data;
 public class UserDomain {
     public String username;
     public String password;
-    public String creationDate;
     public boolean active;
 }

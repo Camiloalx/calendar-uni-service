@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -30,7 +30,8 @@ public class UserEntity implements Serializable {
     private String password;
 
     @Column(name = "fecha_creacion", nullable = false)
-    private Timestamp creationDate;
+    private LocalDateTime
+            creationDate;
 
     @Column(name = "activo", nullable = false)
     private boolean active;
